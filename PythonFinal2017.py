@@ -11,7 +11,15 @@ def put_mark(index, mark, board):
     """
     board[index] = mark
     return board
-victorylist = [(1,2,3),(4,5,6), (7,8,9), (1,4,7), (2,5,8), (3,6,9), (1,5,9), (3,5,7)]
+
+
+
+
+##VL = victorylist = [(1,2,3),(4,5,6), (7,8,9), (1,4,7), (2,5,8), (3,6,9), (1,5,9), (3,5,7)]
+##
+##open_slot = ''
+
+
 def show_board(board):
     return """ {0} | {1} | {2}""".format(*board)
 
@@ -41,17 +49,7 @@ def draw(a):
     print "\n\t",a[6]," |",a[7],"|",a[8], "\n"
 
 
-##def human_first(human, computer, board):
-##    while victor(human, computer, board) is None:
-##        choice = human_move(human, board)
-##        board[int(choice)]
-##        draw(slots(board))
-##        put_mark
-##        if victor(human, computer, board) != None:
-##            break
-##        else:
-##            pass
-##
+
 
 
 def human_move(board, symbol):
@@ -66,57 +64,51 @@ def human_move(board, symbol):
                 print ("The spot is already taken.")
             else:
                 board[slot-1] = symbol
-                slot = 'done'
-           
+                slot = 'done'   
     return board
 
 def computer_move(board, symbol):
     print("My turn. I pick...")
     open_slots = []
-    for index, item in enumerate(board):
-        if item == '':
-            open_slots.append(index)
-    choice = random.choice(open_slots)
+    choice = bestmoves(board)
+##    for index, item in enumerate(board):
+##        if item == '':
+##            open_slots.append(index)
+##    choice = random.choice(open_slots)
     return put_mark(choice, symbol, board)
 
-##def winner(board):
-##    """Determine the game winner."""
-##    WAYS_TO_WIN = ((0, 1, 2),
-##                   (3, 4, 5),
-##                   (6, 7, 8),
-##                   (0, 3, 6),
-##                   (1, 4, 7),
-##                   (2, 5, 8),
-##                   (0, 4, 8),
-##                   (2, 4, 6))
-##
-##    for row in WAYS_TO_WIN:
-##        if board[row[0]] == board[row[1]] == board[row[2]] != EMPTY:
-##            winner = board[row[0]]
-##            return winner
-##
-##    if EMPTY not in board:
-##        return TIE
-##
-##    return None
+def bestmoves(board):
+    bestmoves = (4, 0, 2, 6, 8, 1, 3, 5, 7)
+    for move in bestmoves:
+        if board[move] == '':
+            return move
+
+def checkline(symbol, slot1, slot2, slot3):
+    if board[slot1] == symbol and board[slot2] == symbol and board[slot3] == symbol:
+        return True
+
+def checkvictory(symbol):
+     if checkline(symbol, 0,1,2):
+        return True
+     if checkline(symbol, 3,4,5):
+        return True
+     if checkline(symbol, 6,7,8):
+        return True
+     if checkline(symbol, 0,4,8):
+        return True
+     if checkline(symbol, 2,4,6):
+        return True
+     if checkline(symbol, 0,3,6):
+        return True
+     if checkline(symbol, 1,4,7):
+        return True
+     if checkline(symbol,2,5,8):
+        return True
 
 
-##def victory(board, symbol, victory):
-##    
-##    for item in victorylist:
-##        if board[1[0]] == board[i[1]] == board[i[2]] != null:
-##            winner = board[1[0]]
-##        
-##            if winner  == human:
-##                return "first"
-##            elif winner == computer:
-##                return "second"
-##        if null not in board:
-##                return "We tied"
-##        return none
-##            
 
-  
+
+    
 ## main
 board = ['', '', '', '', '', '', '', '', '']
 slots = ['1', '2', '3', '4', '5', '6' , '7', '8', '9']
@@ -144,20 +136,29 @@ while choice != 'q':
 
     turns = 0
     while turns != 9:
+        print(board)
         turns += 1
         print("Turn number: {}".format(turns))
         if turn == "first":     
             board = human_move(board, human)
             turn = 'second'
+            if checkvictory(human):
+                
+                print "Humanity wins!"
+                draw(board)
+                break;
         else:
             board = computer_move(board, computer)
+            if checkvictory(computer):
+                
+                print "The Machines have won!"
+                draw(board)
+                break;
             turn = 'first'
         print("Here's the board now!")
-       
+      
         draw(board)
-        
-
-           
+##    winner(board, slots, open_slot)
     choice = raw_input("Do you want to quit? ")
     print("You chose {}".format(choice))
 
@@ -165,6 +166,7 @@ while choice != 'q':
 ## Game Play
 
 
+                
                 
                 
                
